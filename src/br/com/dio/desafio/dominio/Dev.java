@@ -6,15 +6,25 @@ public class Dev {
     private String nome;
     private Set<Conteudo> conteudosInscritos = new LinkedHashSet<>();
     private Set<Conteudo> conteudosConcluidos = new LinkedHashSet<>();
+    private Set<Conteudo> conteudosDesistidos = new LinkedHashSet<>();
 
-    public void inscreverBootcamp(Bootcamp bootcamp){
+    public void desistirConteudo() {
+        Optional<Conteudo> conteudo = this.conteudosInscritos.stream().findFirst();
+        if (conteudo.isPresent()) {
+            this.conteudosDesistidos.add(conteudo.get());
+            this.conteudosInscritos.remove(conteudo.get());
+        }
+
+    }
+
+    public void inscreverBootcamp(Bootcamp bootcamp) {
         this.conteudosInscritos.addAll(bootcamp.getConteudos());
         bootcamp.getDevsInscritos().add(this);
     }
 
     public void progredir() {
         Optional<Conteudo> conteudo = this.conteudosInscritos.stream().findFirst();
-        if(conteudo.isPresent()) {
+        if (conteudo.isPresent()) {
             this.conteudosConcluidos.add(conteudo.get());
             this.conteudosInscritos.remove(conteudo.get());
         } else {
@@ -25,7 +35,7 @@ public class Dev {
     public double calcularTotalXp() {
         Iterator<Conteudo> iterator = this.conteudosConcluidos.iterator();
         double soma = 0;
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             double next = iterator.next().calcularXp();
             soma += next;
         }
@@ -60,6 +70,14 @@ public class Dev {
 
     public void setConteudosConcluidos(Set<Conteudo> conteudosConcluidos) {
         this.conteudosConcluidos = conteudosConcluidos;
+    }
+
+    public Set<Conteudo> getConteudosDesistidos() {
+        return conteudosDesistidos;
+    }
+
+    public void setConteudosDesistidos(Set<Conteudo> conteudosDesistidos) {
+        this.conteudosDesistidos = conteudosDesistidos;
     }
 
     @Override
